@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule, RouterModule]
 })
 export class LoginComponent implements OnInit {
 
@@ -20,15 +20,17 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Creamos el formulario con validaciones
+    console.log("LoginComponent cargado");
+    
     this.loginForm = this.fb.group({
-      email: ['', [Validators.required]], 
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      email: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(8)]]
     });
-
-    // Si el usuario ya está logueado, lo redirigimos a productos
-    if (localStorage.getItem('logueado')) {
-      this.router.navigate(['/producto']);
+    
+    const yaEstaEnLogin = this.router.url === '/login' || this.router.url === '';
+    
+    if (localStorage.getItem('logueado') === 'true' && !yaEstaEnLogin) {
+      this.router.navigate(['/product']);
     }
   }
 
